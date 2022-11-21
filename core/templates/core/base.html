@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+<head>
+<title>Foody {% if title %}| {{ title }}{% endif %}</title>
+<link rel="icon" href="{% static 'logo.png' %}" type="image/x-icon">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-white bg-white" style="min-height: 10vh;">
+    <div class="container">
+      <a class="navbar-brand fs-4" href="{% url 'core:home' %}">
+        <img src="{% static 'logo.png' %}" alt="Foody LOGO" width="50" height="50">
+        Foody
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        {% if request.path == '/' %}
+        <ul class="navbar-nav mb-2 mb-lg-0 me-auto">
+          <li class="nav-item">
+            <a class="nav-link fw-bold" href="#">How it works</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link fw-bold" href="#">Find a restaurant</a>
+          </li>
+        </ul>
+        {% endif %}
+        <ul class="navbar-nav mb-2 mb-lg-0 ms-auto">
+        {% if request.user.is_authenticated %}
+          {% if restaurant %}
+          <li class="nav-item">
+            <a class="nav-link" href="#">View Menu</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger" href="#">My Orders</a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-bold" href="{% url 'core:logout' %}">Logout</a>
+          </li>
+        {% else %}
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-bold" href="{% url 'core:login' %}">Login</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link text-danger fw-bold" href="{% url 'core:signin' %}">Register</a>
+          </li>
+        {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="bg-light" style="min-height: 80vh;">
+    <div class="row">&nbsp;</div>
+    <div class="container">
+      {% block content %}{% endblock %}
+    </div>
+    <div class="row">&nbsp;</div>
+  </div>
+  <div class="row py-4 px-4 bg-danger" style="min-height: 10vh;">
+    <!-- Copyright -->
+    <div class="col-sm text-center text-sm-start my-auto">
+      <span class="text-white">Copyright © 2022. All rights reserved.</span>
+    </div>
+    <!-- Copyright -->
+
+    <!-- Right -->
+    <div class="col-sm-4 text-center text-sm-end my-auto">
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-facebook-f"></i>
+      </a>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-twitter"></i>
+      </a>
+      <a href="#!" class="text-white me-4">
+        <i class="fab fa-google"></i>
+      </a>
+      <a href="#!" class="text-white">
+        <i class="fab fa-linkedin-in"></i>
+      </a>
+    </div>
+    <!-- Right -->
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8" crossorigin="anonymous"></script>
+</body>
+</html>

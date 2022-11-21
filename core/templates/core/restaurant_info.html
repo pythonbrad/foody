@@ -1,0 +1,67 @@
+{% with restaurant.computed_info as restaurant_info %}
+<div class="card bg-white">
+  <div class="card-body">
+    <div class="row">
+      <div class="col-sm">
+        <div class="row">
+          <span class="fw fs-3">
+            {{ restaurant.name|default_if_none:"RESTAURANT_NAME" }}
+            {% if short %}
+              <i class="fa fa-clock text-{% if restaurant_info.is_open %}success{% else %}danger{% endif %}"></i>
+              {% if restaurant.has_delivery %}
+              <i class="fa fa-truck-field"></i>
+              {% endif %}
+            {% endif %}
+          </span>
+        </div>
+        <div class="row">
+          <span>
+          {% for i in restaurant_info.stars %}
+            {% if i %}
+            <i class="fa fa-star"></i>
+            {% else %}
+            <i class="fa fa-star text-muted"></i>
+            {% endif %}
+          {% endfor %}
+          ({{ restaurant_info.marks }})
+          </span>
+        </div>
+        <div class="row">
+          <span class="text-muted">{{ restaurant.address|default_if_none:"RESTAURANT_ADDRESS" }}</span>
+        </div>
+      </div>
+      {% if not short %}
+      <div class="col-sm">
+        <div class="row">
+          {% if restaurant_info.is_open %}
+          <span class="text-success fw-bold">We are open</span>
+          {% else %}
+          <span class="text-danger fw-bold">We are close</span>
+          {% endif %}
+        </div>
+        <div class="row">
+          <span>
+            <i class="fa fa-clock"></i>&nbsp;{{ restaurant_info.working_hours }} ({{ restaurant.gmt }})<br>
+            {% for k, v in restaurant_info.working_days.items %}
+            <span class="fw-bold small {% if v %}text-black{% else %}text-muted{% endif %}">{{ k }}</span>
+            {% empty %}
+            RESTAURANT_AVAILABILITY
+            {% endfor %}
+          </span>
+        </div>
+        <div class="row">
+          <span class="text-muted">
+            Delivery and Pickup
+            {% if restaurant.has_delivery %}
+              available
+            {% else %}
+              unavailable
+            {% endif %}
+          </span>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endwith %}

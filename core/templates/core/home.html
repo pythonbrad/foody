@@ -1,0 +1,52 @@
+{% extends 'core/base.html' %}
+{% load static %}
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-lg">
+      <img class="img-fluid" src="{% static 'media/food.png' %}">
+    </div>
+    <div class="col-lg my-auto">
+      <div class="row">
+        <span class="fs-1 fw-bold text-danger">Order delicious food online</span>
+      </div>
+      <div class="row m-auto">
+        <span class="text-muted">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+          tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+          quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+          consequat.
+        </span>
+      </div>
+      <div class="row">&nbsp;</div>
+      <div class="row">
+        <div class="col">
+          <input type="text" class="form-control" name="search" placeholder="Enter an restaurant address/code">
+        </div>
+        <div class="col-4">
+          <input type="submit" value="Find" class="btn btn-danger">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-5">&nbsp;</div>
+  <div class="container">
+    <div class="row">
+      <span class="fs-1 fw-bold text-center text-muted">Our popular restaurants</span>
+    </div>
+    <div class="row">
+      <span class="fs-5 text-center text-muted">We have great restaurants. And this is why you will love us. Let's take a look on these</span>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row ms-auto">
+      {% for _, restaurant in restaurants %}
+      <div class="col-sm-6 text-center mt-4">
+        <a class="text-body text-decoration-none" href="{% url 'core:restaurant_page' restaurant.code %}">
+        {% include 'core/restaurant_info.html' with short=True %}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
