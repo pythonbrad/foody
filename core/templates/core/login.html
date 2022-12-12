@@ -1,0 +1,31 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+  <div class="card w-75 mx-auto">
+    <div class="card-body pt-4">
+      <h2 class="text-center mb-4">Login</h2>
+      <form action="?next={{ next_url }}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <!-- 2 column grid layout for inline styling -->
+        <div class="row mb-4">
+          <div class="col">&nbsp;</div>
+          <div class="col">
+            <!-- Simple link -->
+            <a href="#!">Forgot password?</a>
+          </div>
+        </div>
+        <!-- Submit button -->
+        <input type="submit" class="btn btn-danger btn-block mb-4 form-control" value="Login">
+
+        <!-- Register buttons -->
+        <div class="text-center">
+          <p>Not a member? <a href="{% url 'core:signin' %}?next={{ next_url }}">Register</a></p>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

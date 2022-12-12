@@ -25,3 +25,6 @@ cp .env_example .env
 python manage.py makemigrations
 python manage.py migrate
 ```
+
+## License
+MIT

@@ -1,0 +1,153 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+{% load humanize %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-2 mb-2">
+    <div class="row my-2">
+      <a href='#' class="text-decoration-none text-danger">All categories</a>
+    </div>
+    {% for category in categories %}
+    <div class="row my-2">
+      <a href='#' class="text-decoration-none text-dark">{{ category.name|default_if_none:"CATEGORY_NAME" }}</a>
+    </div>
+    {% endfor %}
+  </div>
+  <div class="col-lg mb-3">
+    {% if restaurant.has_delivery %}
+    <div class="row">
+      <div class="card bg-white">
+        <div class="card-body">
+        {% if request.user.is_authenticated %}
+          {{ contactform|crispy }}
+        {% else %}
+          <p class="text-center text-muted mb-0">
+            Do you want to order?<br>
+            <a href="{% url 'core:login' %}?next={{ request.path }}" class="fw-bold text-body"><u>Login</u></a>
+             or <a href="{% url 'core:signin' %}?next={{ request.path }}" class="fw-bold text-body"><u>Create an account</u></a>
+          </p>
+        {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <div class="row mt-1">
+      {% include 'core/restaurant_info.html' %}
+    </div>
+    <div class="row mt-1">
+      <div class="card">
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <a href="#" class="fw-bold text-danger text-decoration-none">Menu</a>
+            </div>
+            <div class="col">
+              <a href="#" class="fw-bold text-dark text-decoration-none">Reviews</a>
+            </div>
+            <div class="col">
+              <a href="#" class="fw-bold text-dark text-decoration-none">Info</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-1">
+      <div class="card">
+        <div class="card-body">
+          {% for menu in restaurant.computed_info.menus %}
+            <div class="row">
+              <span class="fw-bold">{{ menu.name }}</span>
+            </div>
+            <hr size="#">
+            {% for item in menu.items.filter %}
+            <div class="row">
+              <div class="col-sm">
+                <div class="row">
+                  <span>{{ item.name|default_if_none:"ITEM_NAME" }}</span>
+                </div>
+                <div class="row">
+                  <span class="text-muted">{{ item.description|default_if_none:"ITEM_DESCRIPTION" }}</span>
+                </div>
+                <div class="row"></div>
+              </div>
+              <div class="col-sm text-sm-end">
+                <span>
+                  <span class="fw-bold small">
+                    {{ item.price|intcomma|default_if_none:"ITEM_PRICE" }}
+                  </span>
+                  {% if request.user.is_authenticated and restaurant.has_delivery %}
+                  &nbsp;<i class="fa fa-square-plus text-muted" onclick='window.location.href="?add_item={{ item.id }}"'></i>
+                  {% endif %}
+                </span>
+              </div>
+            </div>
+              {% if not forloop.last %}
+            <hr size="#">
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    {% if request.user.is_authenticated and restaurant.has_delivery %}
+    <div class="card">
+      <div class="card-body">
+        <div class="row text-center">
+          <span class="fw-bold">{{ order }}</span>
+        </div>
+        <hr size="#">
+        <div class="row bg-secondary bg-opacity-25 rounded mx-1 mb-3 py-1">
+          <span class="text-center fw-bold">Option</span>
+        </div>
+        <div class="row mx-1 mb-3">
+          <div class="col bg-secondary bg-opacity-{% if order.option == 'd' %}50{% else %}25{% endif %} rounded-start py-1" onclick='window.location.href="?option=d"'>
+            <div class="row m-auto">
+              <span class="fw-bold">Delivery</span>
+            </div>
+            <div class="row m-auto">
+              <span>in {{ restaurant.delivery_delay }} min</span>
+            </div>
+          </div>
+          <div class="col bg-secondary bg-opacity-{% if order.option == 'p' %}50{% else %}25{% endif %} rounded-end py-1" onclick='window.location.href="?option=p"'>
+            <div class="row m-auto">
+              <span class="fw-bold">Pick-up</span>
+            </div>
+            <div class="row m-auto">
+              <span>in {{ restaurant.pickup_delay }} min</span>
+            </div>
+          </div>
+        </div>
+        {% for orderitem in order.orderitem_set.filter %}
+          {% if forloop.first %}
+        <hr size="#">
+          {% endif %}
+        <div class="row mt-2">
+          <div class="col-sm">
+            <i class="fa fa-minus-square text-muted" onclick='window.location.href="?remove_item={{ orderitem.id }}"'></i>&nbsp;
+            <span class="fw-bold">{{ orderitem.quantity|default_if_none:"ORDER_ITEM_QUANTITY" }} x</span> {{ orderitem.item|default_if_none:"ORDER_ITEM" }}
+          </div>
+          <div class="col-sm text-sm-end">
+            <span>{{ orderitem.unit_price|intcomma|default_if_none:"ORDER_ITEM_PRICE" }}</span>
+          </div>
+        </div>
+        {% endfor %}
+        <hr size="#">
+        <div class="row">
+          <div class="col-sm">
+            <span class="text-muted">Order Total:</span>
+          </div>
+          <div class="col-sm text-sm-end">
+            <span class="fw-bold">{{ order.total_price|intcomma|default_if_none:"ORDER_TOTAL_PRICE" }}</span>
+          </div>
+        </div>
+        <div class="row mt-3 mx-2">
+          <a href="#" class="btn btn-danger">Checkout</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

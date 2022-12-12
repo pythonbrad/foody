@@ -1,0 +1,25 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row">
+  <div class="card w-75 mx-auto">
+    <div class="card-body pt-4">
+      <h2 class="text-center mb-4">Create an account</h2>
+      <form action="?next={{ next_url }}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex justify-content-center mb-4">
+          <span>
+            In creating an account, you agree all statements in <a href="#!" class="text-body"><u>Terms of service</u></a>.
+          </span>
+        </div>
+        <div class="d-flex justify-content-center">
+          <input type="submit" class="btn btn-danger btn-block gradient-custom-4 form-control" value="Register">
+        </div>
+        <p class="text-center text-muted mt-4 mb-0">Have already an account? <a href="{% url 'core:login' %}?next={{ next_url }}" class="fw-bold text-body"><u>Login here</u></a></p>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
